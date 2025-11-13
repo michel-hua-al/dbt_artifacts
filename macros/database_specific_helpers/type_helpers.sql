@@ -43,3 +43,17 @@
 {% macro bigquery__type_array() %}
    array<string>
 {% endmacro %}
+
+{#- STRING -#}
+
+{% macro type_string() %}
+    {{ return(adapter.dispatch('type_string', 'dbt_artifacts')()) }}
+{% endmacro %}
+
+{% macro default__type_string() %}
+   {{ return(api.Column.translate_type("string")) }}
+{% endmacro %}
+
+{% macro athena__type_string() %}
+   varchar(65535)
+{% endmacro %}
