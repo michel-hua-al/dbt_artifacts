@@ -208,22 +208,22 @@
     {% if models != [] %}
         {% set model_execution_values %}
         select
-            cast(col1 as varchar) as command_invocation_id,
-            cast(col2 as varchar) as node_id,
-            cast(col3 as varchar) as run_started_at,
+            cast(col1 as string) as command_invocation_id,
+            cast(col2 as string) as node_id,
+            cast(col3 as string) as run_started_at,
             cast(col4 as boolean) as was_full_refresh,
-            cast(col5 as varchar) as thread_id,
-            cast(col6 as varchar) as status,
-            cast(col7 as varchar) as compile_started_at,
-            cast(col8 as varchar) as query_completed_at,
+            cast(col5 as string) as thread_id,
+            cast(col6 as string) as status,
+            cast(col7 as string) as compile_started_at,
+            cast(col8 as string) as query_completed_at,
             cast(col9 as double) as total_node_runtime,
             cast(col10 as integer) as rows_affected,
-            cast(col11 as varchar) as materialization,
-            cast(col12 as varchar) as schema,
-            cast(col13 as varchar) as name,
-            cast(col14 as varchar) as alias,
-            cast(col15 as varchar) as message,
-            cast(col16 as varchar) as adapter_response
+            cast(col11 as string) as materialization,
+            cast(col12 as string) as schema,
+            cast(col13 as string) as name,
+            cast(col14 as string) as alias,
+            cast(col15 as string) as message,
+            cast(col16 as string) as adapter_response
         from values
         {% for model in models -%}
             (
