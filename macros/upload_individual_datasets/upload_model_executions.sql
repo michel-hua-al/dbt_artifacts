@@ -207,16 +207,30 @@
 {% macro athena__get_model_executions_dml_sql(models) -%}
     {% if models != [] %}
         {% set model_execution_values %}
+        select
+            cast(col1 as varchar) as command_invocation_id,
+            cast(col2 as varchar) as node_id,
+            cast(col3 as varchar) as run_started_at,
+            cast(col4 as boolean) as was_full_refresh,
+            cast(col5 as varchar) as thread_id,
+            cast(col6 as varchar) as status,
+            cast(col7 as varchar) as compile_started_at,
+            cast(col8 as varchar) as query_completed_at,
+            cast(col9 as double) as total_node_runtime,
+            cast(col10 as integer) as rows_affected,
+            cast(col11 as varchar) as materialization,
+            cast(col12 as varchar) as schema,
+            cast(col13 as varchar) as name,
+            cast(col14 as varchar) as alias,
+            cast(col15 as varchar) as message,
+            cast(col16 as varchar) as adapter_response
+        from values
         {% for model in models -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model.node.unique_id }}', {# node_id #}
-                {% if config.get("table_type") == "iceberg" %}
-                    cast('{{ run_started_at }}' as timestamp(6)), {# run_started_at #}
-                {% else %}
-                    '{{ run_started_at }}', {# run_started_at #}
-                {% endif %}                
-                
+                '{{ run_started_at }}', {# run_started_at #}
+
 
                 {% set config_full_refresh = model.node.config.full_refresh %}
                 {% if config_full_refresh is none %}
@@ -229,21 +243,13 @@
 
                 {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({}))["started_at"] %}
                 {% if compile_started_at %}
-                    {% if config.get("table_type") == "iceberg" %}
-                        cast('{{ compile_started_at }}' as timestamp(6)) {# compile_started_at #}
-                    {% else %}
-                        '{{ compile_started_at }}' {# compile_started_at #}
-                    {% endif %}
+                    '{{ compile_started_at }}' {# compile_started_at #}
                 {% else %}
                     null {# compile_started_at #}
                 {% endif %},
                 {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({}))["completed_at"] %}
                 {% if query_completed_at %}
-                    {% if config.get("table_type") == "iceberg" %}
-                        cast('{{ query_completed_at }}' as timestamp(6)) {# query_completed_at #}
-                    {% else %}
-                        '{{ query_completed_at }}' {# query_completed_at #}
-                    {% endif %}                
+                    '{{ query_completed_at }}' {# query_completed_at #}
                 {% else %}
                     null
                 {% endif %},

@@ -55,5 +55,5 @@
 {% endmacro %}
 
 {% macro athena__type_string() %}
-   varchar(65535)
+   string
 {% endmacro %}
